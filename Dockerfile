@@ -10,6 +10,8 @@ RUN apt-get update && apt-get install -y \
     libonig-dev \
     libxml2-dev \
     libicu-dev \
+    curl \
+    gnupg \
     && docker-php-ext-configure gd --with-freetype --with-jpeg \
     && docker-php-ext-install gd pdo_mysql zip
 
@@ -30,8 +32,9 @@ RUN curl -fsSL https://deb.nodesource.com/setup_18.x | bash - \
 
 WORKDIR /var/www/html
 RUN npm install
-
 RUN npm run build
+
+RUN chown -R www-data:www-data /var/www/html/public
 
 EXPOSE 80
 CMD ["apache2-foreground"]
