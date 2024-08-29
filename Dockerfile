@@ -12,10 +12,17 @@ RUN apt-get update && apt-get install -y \
     libicu-dev \
     curl \
     gnupg \
+    openssl \
     && docker-php-ext-configure gd --with-freetype --with-jpeg \
     && docker-php-ext-install gd pdo_mysql zip
 
-RUN a2enmod rewrite
+RUN a2enmod rewrite ssl
+
+RUN mkdir -p /etc/apache2/ssl \
+    && openssl req -x509 -nodes -days 365 -newkey rsa:2048 \
+    -keyout /etc/apache2/ssl/apache.key \
+    -out /etc/apache2/ssl/apache.crt \
+    -subj "/C=US/ST=State/L=City/O=Organization/OU=Department/CN=localhost"
 
 ENV APACHE_DOCUMENT_ROOT=/var/www/html/public
 RUN sed -ri -e 's!/var/www/html!${APACHE_DOCUMENT_ROOT}!g' /etc/apache2/sites-available/*.conf
@@ -24,9 +31,7 @@ RUN sed -ri -e 's!/var/www/!${APACHE_DOCUMENT_ROOT}!g' /etc/apache2/apache2.conf
 COPY --chown=www-data:www-data . /var/www/html
 
 RUN curl -sS https://getcomposer.org/installer | php -- --install-dir=/usr/local/bin --filename=composer
-
 RUN composer install --no-dev --optimize-autoloader
-
 RUN curl -fsSL https://deb.nodesource.com/setup_18.x | bash - \
     && apt-get install -y nodejs
 
@@ -36,5 +41,7 @@ RUN npm run build
 
 RUN chown -R www-data:www-data /var/www/html/public
 
-EXPOSE 80
+COPY ./apache-ssl.conf /etc/apache2/sites-available/default-ssl.conf
+
+EXPOSE 80 443
 CMD ["apache2-foreground"]
