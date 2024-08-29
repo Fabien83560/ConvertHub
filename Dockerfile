@@ -33,4 +33,4 @@ RUN npm install
 RUN npm run build
 
 EXPOSE 80
-CMD ["apache2-foreground"]*
+CMD ["apache2-foreground"]
