@@ -1,7 +1,9 @@
 <?php
- 
-// lang/fr/titles.php
- 
+
 return [
-    'home' => 'Acceuil',
+    'titles' => [
+        'home' => 'Accueil',
+        'avalaible-conversion' => 'Conversions Disponibles',
+        'api' => 'API',
+    ],
 ];
