@@ -12,17 +12,15 @@ RUN apt-get update && apt-get install -y \
     libicu-dev \
     curl \
     gnupg \
-    openssl \
     && docker-php-ext-configure gd --with-freetype --with-jpeg \
     && docker-php-ext-install gd pdo_mysql zip
 
 RUN a2enmod rewrite ssl
 
-RUN mkdir -p /etc/apache2/ssl \
-    && openssl req -x509 -nodes -days 365 -newkey rsa:2048 \
-    -keyout /etc/apache2/ssl/apache.key \
-    -out /etc/apache2/ssl/apache.crt \
-    -subj "/C=US/ST=State/L=City/O=Organization/OU=Department/CN=localhost"
+COPY ./path/to/your/certs/fullchain.pem /etc/ssl/certs/fullchain.pem
+COPY ./path/to/your/certs/privkey.pem /etc/ssl/private/privkey.pem
+
+COPY ./apache-ssl.conf /etc/apache2/sites-available/default-ssl.conf
 
 ENV APACHE_DOCUMENT_ROOT=/var/www/html/public
 RUN sed -ri -e 's!/var/www/html!${APACHE_DOCUMENT_ROOT}!g' /etc/apache2/sites-available/*.conf
@@ -40,8 +38,6 @@ RUN npm install
 RUN npm run build
 
 RUN chown -R www-data:www-data /var/www/html/public
-
-COPY ./apache-ssl.conf /etc/apache2/sites-available/default-ssl.conf
 
 EXPOSE 80 443
 CMD ["apache2-foreground"]
