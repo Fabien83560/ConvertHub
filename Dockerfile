@@ -18,8 +18,9 @@ RUN apt-get update && apt-get install -y \
 
 RUN a2enmod rewrite ssl
 
-RUN mkdir -p /etc/apache2/ssl \
-    && openssl req -x509 -nodes -days 365 -newkey rsa:2048 \
+RUN mkdir -p /etc/apache2/ssl
+
+RUN openssl req -x509 -nodes -days 365 -newkey rsa:2048 \
     -keyout /etc/apache2/ssl/apache.key \
     -out /etc/apache2/ssl/apache.crt \
     -subj "/C=US/ST=State/L=City/O=Organization/OU=Department/CN=localhost"
@@ -32,6 +33,7 @@ COPY --chown=www-data:www-data . /var/www/html
 
 RUN curl -sS https://getcomposer.org/installer | php -- --install-dir=/usr/local/bin --filename=composer
 RUN composer install --no-dev --optimize-autoloader
+
 RUN curl -fsSL https://deb.nodesource.com/setup_18.x | bash - \
     && apt-get install -y nodejs
 
