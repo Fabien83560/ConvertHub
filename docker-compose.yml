@@ -1,7 +1,6 @@
 version: '3'
 services:
   website:
-    user: "www-data"
     build:
       dockerfile: Dockerfile
     container_name: converthub-website
@@ -9,3 +8,9 @@ services:
       - "8002:80"
       - "8443:443"
     restart: always
+    networks:
+      - mynetwork
+
+networks:
+  mynetwork:
+    driver: bridge
