@@ -1,5 +1,6 @@
 FROM php:8.2-apache
 
+# Installer les dépendances nécessaires
 RUN apt-get update && apt-get install -y \
     libzip-dev \
     zip \
@@ -11,6 +12,7 @@ RUN apt-get update && apt-get install -y \
     libxml2-dev \
     libicu-dev \
     certbot \
+    python3-certbot-apache \
     && docker-php-ext-configure gd --with-freetype --with-jpeg \
     && docker-php-ext-install gd pdo_mysql zip
 
