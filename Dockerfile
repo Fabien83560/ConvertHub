@@ -14,7 +14,8 @@ RUN apt-get update && apt-get install -y \
     python3-certbot-apache \
     && docker-php-ext-configure gd --with-freetype --with-jpeg \
     && docker-php-ext-install gd pdo_mysql zip \
-    && a2enmod rewrite
+    && a2enmod rewrite \
+    && a2enmod ssl
 
 ENV APACHE_DOCUMENT_ROOT=/var/www/html/public
 RUN sed -ri -e 's!/var/www/html!${APACHE_DOCUMENT_ROOT}!g' /etc/apache2/sites-available/*.conf \
