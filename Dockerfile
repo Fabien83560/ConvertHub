@@ -23,7 +23,9 @@ RUN sed -ri -e 's!/var/www/html!${APACHE_DOCUMENT_ROOT}!g' /etc/apache2/sites-av
 RUN sed -ri -e 's!/var/www/!${APACHE_DOCUMENT_ROOT}!g' /etc/apache2/apache2.conf /etc/apache2/conf-available/*.conf
 
 COPY ./converthub.ortegaf.fr.conf /etc/apache2/sites-available/converthub.ortegaf.fr.conf
-RUN certbot --apache -d converthub.ortegaf.fr --non-interactive --agree-tos -m fabienortega.290604@gmail.com
+COPY ./init-certbot.sh /usr/local/bin/init-certbot.sh
+RUN chmod +x /usr/local/bin/init-certbot.sh
+
 COPY --chown=www-data:www-data . /var/www/html
 
 RUN curl -sS https://getcomposer.org/installer | php -- --install-dir=/usr/local/bin --filename=composer
@@ -39,4 +41,5 @@ RUN npm run build
 RUN chown -R www-data:www-data /var/www/html/public
 
 EXPOSE 80 443
-CMD ["apache2-foreground"]
+
+CMD ["/usr/local/bin/init-certbot.sh"]

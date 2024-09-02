@@ -7,4 +7,5 @@ services:
     container_name: converthub-website
     ports:
       - "8002:80"
+      - "8443:443"
     restart: always
