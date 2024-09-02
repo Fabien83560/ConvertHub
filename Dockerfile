@@ -24,6 +24,7 @@ COPY ./converthub.ortegaf.fr.conf /etc/apache2/sites-available/converthub.ortega
 COPY ./init-certbot.sh /usr/local/bin/init-certbot.sh
 RUN chmod +x /usr/local/bin/init-certbot.sh
 
+RUN echo 'ServerName converthub.ortegaf.fr' >> /etc/apache2/apache2.conf
 COPY --chown=www-data:www-data . /var/www/html
 
 RUN curl -sS https://getcomposer.org/installer | php -- --install-dir=/usr/local/bin --filename=composer \

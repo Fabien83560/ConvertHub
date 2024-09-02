@@ -1,5 +1,8 @@
 #!/bin/bash
 
+mkdir -p /var/log/letsencrypt
+chown -R www-data:www-data /var/log/letsencrypt
+
 apachectl start
 
 sleep 10
