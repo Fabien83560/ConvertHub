@@ -1,6 +1,7 @@
 version: '3'
 services:
   website:
+    user: "www-data"
     build:
       dockerfile: Dockerfile
     container_name: converthub-website
