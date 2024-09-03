@@ -42,12 +42,12 @@ RUN openssl req -x509 -nodes -days 365 -newkey rsa:2048 \
     -out /etc/ssl/certs/apache-selfsigned.crt \
     -subj "/C=FR/ST=Ile-de-France/L=Paris/O=MyCompany/OU=Dev/CN=converthub.ortegaf.fr" \
     && chmod 600 /etc/ssl/private/apache-selfsigned.key \
-    && chmod 644 /etc/ssl/certs/apache-selfsigned.crt \
-    && ls -l /etc/ssl/private/ \
-    && ls -l /etc/ssl/certs/
+    && chmod 644 /etc/ssl/certs/apache-selfsigned.crt
 
-RUN test -f /etc/ssl/private/apache-selfsigned.key && echo "SSL key file found" || (echo "SSL key file missing" && exit 1) \
-    && test -f /etc/ssl/certs/apache-selfsigned.crt && echo "SSL certificate file found" || (echo "SSL certificate file missing" && exit 1)
+RUN ls -l /etc/ssl/private/ \
+    && ls -l /etc/ssl/certs/ \
+    && test -f /etc/ssl/private/apache-selfsigned.key || (echo "SSL key file missing" && exit 1) \
+    && test -f /etc/ssl/certs/apache-selfsigned.crt || (echo "SSL certificate file missing" && exit 1)
 
 EXPOSE 80 443
 
