@@ -36,12 +36,13 @@ RUN a2ensite converthub.ortegaf.fr.conf
 
 RUN a2dissite 000-default.conf
 
-RUN curl -sS https://getcomposer.org/installer | php -- --install-dir=/usr/local/bin --filename=composer
-RUN composer install
+RUN mkdir -p /etc/ssl/private
 
 RUN openssl req -x509 -nodes -days 365 -newkey rsa:2048 \
     -keyout /etc/ssl/private/apache-selfsigned.key \
     -out /etc/ssl/certs/apache-selfsigned.crt \
     -subj "/C=FR/ST=Ile-de-France/L=Paris/O=MyCompany/OU=Dev/CN=converthub.ortegaf.fr"
+
+RUN test -f /etc/ssl/private/apache-selfsigned.key || (echo "SSL key file not found!" && exit 1)
 
 EXPOSE 80 443
