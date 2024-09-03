@@ -35,15 +35,19 @@ RUN a2ensite converthub.ortegaf.fr.conf
 RUN a2dissite 000-default.conf
 
 RUN mkdir -p /etc/ssl/private /etc/ssl/certs \
-    && chmod 700 /etc/ssl/private \
-    && openssl req -x509 -nodes -days 365 -newkey rsa:2048 \
+    && chmod 700 /etc/ssl/private
+
+RUN openssl req -x509 -nodes -days 365 -newkey rsa:2048 \
     -keyout /etc/ssl/private/apache-selfsigned.key \
     -out /etc/ssl/certs/apache-selfsigned.crt \
     -subj "/C=FR/ST=Ile-de-France/L=Paris/O=MyCompany/OU=Dev/CN=converthub.ortegaf.fr" \
     && chmod 600 /etc/ssl/private/apache-selfsigned.key \
-    && chmod 644 /etc/ssl/certs/apache-selfsigned.crt
+    && chmod 644 /etc/ssl/certs/apache-selfsigned.crt \
+    && ls -l /etc/ssl/private/ \
+    && ls -l /etc/ssl/certs/
 
-RUN test -f /etc/ssl/private/apache-selfsigned.key && echo "SSL key file found" || (echo "SSL key file missing" && exit 1)
+RUN test -f /etc/ssl/private/apache-selfsigned.key && echo "SSL key file found" || (echo "SSL key file missing" && exit 1) \
+    && test -f /etc/ssl/certs/apache-selfsigned.crt && echo "SSL certificate file found" || (echo "SSL certificate file missing" && exit 1)
 
 EXPOSE 80 443
 
