@@ -108,6 +108,5 @@ jobs:
           script: |
             cd /~/Docker/ConvertHub/
             docker-compose down
-            docker-compose build --no-cache
-            docker-compose up -d
+            docker-compose up -d --build
             docker image prune -af  # Removes unused Docker images
