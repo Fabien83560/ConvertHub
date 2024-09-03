@@ -34,12 +34,18 @@ COPY converthub.ortegaf.fr.conf /etc/apache2/sites-available/converthub.ortegaf.
 RUN a2ensite converthub.ortegaf.fr.conf
 RUN a2dissite 000-default.conf
 
-RUN mkdir -p /etc/ssl/private
+RUN mkdir -p /etc/ssl/private /etc/ssl/certs
 
 RUN openssl req -x509 -nodes -days 365 -newkey rsa:2048 \
     -keyout /etc/ssl/private/apache-selfsigned.key \
     -out /etc/ssl/certs/apache-selfsigned.crt \
     -subj "/C=FR/ST=Ile-de-France/L=Paris/O=MyCompany/OU=Dev/CN=converthub.ortegaf.fr"
+
+# Assurer les permissions correctes sur les fichiers SSL
+RUN chmod 600 /etc/ssl/private/apache-selfsigned.key \
+    && chmod 644 /etc/ssl/certs/apache-selfsigned.crt \
+    && chown root:root /etc/ssl/private/apache-selfsigned.key \
+    && chown root:root /etc/ssl/certs/apache-selfsigned.crt
 
 RUN echo '#!/bin/bash\n\
 if [ ! -f /etc/ssl/private/apache-selfsigned.key ]; then\n\
