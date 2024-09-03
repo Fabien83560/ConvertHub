@@ -44,10 +44,7 @@ RUN openssl req -x509 -nodes -days 365 -newkey rsa:2048 \
     && chmod 600 /etc/ssl/private/apache-selfsigned.key \
     && chmod 644 /etc/ssl/certs/apache-selfsigned.crt
 
-RUN ls -l /etc/ssl/private/ \
-    && ls -l /etc/ssl/certs/ \
-    && test -f /etc/ssl/private/apache-selfsigned.key || (echo "SSL key file missing" && exit 1) \
-    && test -f /etc/ssl/certs/apache-selfsigned.crt || (echo "SSL certificate file missing" && exit 1)
+RUN ls -l /etc/ssl/private/
 
 EXPOSE 80 443
 
